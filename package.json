@@ -1,0 +1,21 @@
+{
+  "name": "story-fm",
+  "version": "0.0.0",
+  "description": "Barebones story format for Twine 2. Batteries sold seperately.",
+  "main": "src/main.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yuri En",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@typescript-eslint/eslint-plugin": "^6.18.1",
+    "@typescript-eslint/parser": "^6.18.1",
+    "eslint": "^8.56.0",
+    "rollup": "^4.9.4",
+    "tslib": "^2.6.2",
+    "typescript": "^5.3.3"
+  }
+}
