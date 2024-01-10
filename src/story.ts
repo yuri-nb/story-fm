@@ -27,11 +27,11 @@ export class TWStory {
      */
     constructor() {
         const data = document.querySelector('tw-storydata');
-        
+
         this.name = data?.getAttribute('name') || 'default';
         this.startNode = parseInt(data?.getAttribute('startnode') || '1');
         this.passages = [];
-        data?.querySelectorAll('tw-passagedata').forEach( (item) => {
+        data?.querySelectorAll('tw-passagedata').forEach((item) => {
             this.passages.push(new TWPassage(
                 item.getAttribute('name') || 'NO_NAME!',
                 parseInt(item.getAttribute('pid') || '-1'),
@@ -76,11 +76,31 @@ export class TWStory {
     };
 
     /**
-     * Append passage to the document body.
+     * Takes the content of a passage and replaces the Twine Links with html links.
+     * @param passageContent 
+     * @returns 
+     */
+    parseLinks = (passageContent: string) => {
+        // [[Link]]
+        const linkPattern = /\[\[(.*?)\]\]/g;
+        passageContent = passageContent.replace(linkPattern, (match, p1) => `<a href="javascript:void(0)" passageName="${p1}">${p1}</a>`);
+        return passageContent;
+    };
+
+    /**
+     * Append passage to the document body. Also adds eventListeners to Links.
      * @param passage Passage to append.
      */
-    appendPassage = (passage: TWPassage) => {
-        document.body.innerHTML = this.htmlDecode(passage.content);
+    showPassage = (passage: TWPassage) => {
+        document.body.innerHTML = this.parseLinks(this.htmlDecode(passage.content));
+        const links = document.querySelectorAll('a[passageName]');
+        links.forEach((link) => {
+            link.addEventListener('click', () => {
+                const passageName: string = link.getAttribute('passageName') || ''; //TODO: And error handling.
+                const passageData = this.getPassageByName(passageName);
+                this.showPassage(passageData);
+            });
+        });
     };
 
     /**
@@ -88,6 +108,6 @@ export class TWStory {
      */
     start = () => {
         const startPassage = this.getPassageByID(this.startNode);
-        this.appendPassage(startPassage);
+        this.showPassage(startPassage);
     };
 }
